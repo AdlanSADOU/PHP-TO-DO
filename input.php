@@ -1,18 +1,22 @@
 <html>
     <body>
-        <?php
+        <?php 
+            require_once 'connect.php';
+            
+            session_start();
 
-            $database = mysqli_connect("localhost", "root", null, "todo", 3306, null);
-            if (!$database) {
-                echo "Error: Unable to connect to MySQL." . PHP_EOL;
-                echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
-                echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
-                exit;
+            if (isset($_POST['submit'])) {
+                $task = $_POST['task'];
+                $sql = "INSERT INTO input (txt) VALUES ('$task')";
+                
+                if (mysqli_query($database, $sql)) {
+                    $_SESSION['message'] = "Task has been added !";
+                    $_SESSION['msg_type'] = "success";
+                } else {
+                    echo "Error: " . $sql . "<br>" . mysqli_error($database);
+                }
+                header("location: index.php");
             }
-            
-            echo "Success: A proper connection to MySQL was made! The my_db database is great." . PHP_EOL;
-            echo "Host information: " . mysqli_get_host_info($database) . PHP_EOL;
-            
-       ?>
+        ?>
     </body>
 </html>
